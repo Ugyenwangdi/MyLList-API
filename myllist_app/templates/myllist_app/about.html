@@ -1,0 +1,229 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        MyLList
+    </title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" />
+    <!-- BOX ICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/grid.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/app.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <div class="nav-wrapper">
+        <div class="container">
+            <div class="nav">
+                <a href="#" class="logo">
+                    My<span class="main-color">L</span>List
+                </a>
+
+                <div class="nav-lists">
+                    <ul class="nav-menu" id="nav-menu">
+    
+                        <li><a href="{% url 'myllist:home' %}">Home</a></li>
+                        <li><a href="{% url 'myllist:movies' %}">Movies</a></li>
+                        <li><a href="{% url 'myllist:tvs' %}">TVs</a></li>
+                        <li><a href="{% url 'myllist:about' %}">About</a></li>
+
+                        <li>
+                            <form method='POST'>
+                                {% csrf_token %}
+                                <div class="search-box">
+                                    
+                                        <input class="search-txt" type="text" name="movie-input" placeholder="Search movie">                           
+                                        <button class="search-btn" type='submit'><i class="fas fa-search"></i></button>
+                                    
+                                </div>
+                            </form>
+                        </li> 
+                        
+                    </ul>
+                    
+
+                </div>
+                <div class="nav-menu-right">
+                    <ul class="nav-menu" id="nav-menu">
+                          
+                        <li>
+                            {% if request.user.is_authenticated %}
+                            <a href="{% url 'myllist:logout' %}" class="btn btn-hover">
+                                <span>Logout</span>
+                            </a> {% else %}
+                            <a href="{% url 'myllist:login' %}" class="btn btn-hover">
+                                <span>Login</span>
+                            </a> {% endif %}
+                        </li>
+                    </ul>
+                    <!-- MOBILE MENU TOGGLE -->
+                    <div class="hamburger-menu" id="hamburger-menu">
+                        <div class="hamburger"></div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <!-- END NAV -->
+
+    <!-- DETAILS -->
+
+    <div class="movie">
+        <div class="movie__intro">
+            {% comment %} <div class="movie__backdrop"></div> {% endcomment %}
+            <img class="movie__backdrop" src='https://admango.cdn.mangomolo.com/analytics/uploads/at_631591e0d4.jpg'/>
+        </div>
+
+    </div>
+
+    <div class="movie-info-box row">
+ 
+
+
+
+            
+
+            <div class="background-box">
+                <div class="background-txt">About MyLList</div><hr>
+                <div class="background">MyLList is a Bhutanese show database and community. MyLList is the first app of its kind in Bhutan. 
+        
+                    Start your Bhutanese show journey with MyLList today. It's time to get hooked on Shows!
+        
+                    
+                </div>
+
+                <br><br>
+
+
+                <div class="background-txt">What have you watched?</div><hr>
+                <div class="background">
+
+                    MyLList lets you explore the shows in Bhutan and write reviews on your favorite shows. Join the community and start exploring! Plan what to watch next!</div>
+            </div>
+
+        </div>
+
+
+    
+    </div>
+
+
+
+    
+    <!-- FOOTER SECTION -->
+    <footer class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-4 col-md-6 col-sm-12">
+                    <div class="content">
+                        <a href="{% url 'myllist:home' %}" class="logo">
+                            My<span class="main-color">L</span>List
+                        </a>
+                        <p>
+                            Your loknyen database.
+                        </p>
+                        {% if request.user.is_authenticated %}
+                        <p>Logged in as {{request.user}} </p> {% else %}
+                        <p>Not logged in </p>
+                        
+                        {% endif %}
+                        <div class="social-list">
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-facebook"></i>
+                            </a>
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-twitter"></i>
+                            </a>
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8 col-md-6 col-sm-12">
+                    <div class="row">
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>MyLList</b></p>
+                                <ul class="footer-menu">
+
+                                    <li><a class="link-item" href="https://rapidapi.com/Wdzz/api/myllist/">API</a></li>
+                                <li><a class="link-item" href="{% url 'myllist:home' %}">Home</a></li>
+                                <li><a class="link-item" href="{% url 'myllist:movies' %}">Movies</a></li>   
+                                <li><a class="link-item" href="{% url 'myllist:tvs' %}">TV shows</a></li>                                      
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Top Movies</b></p>
+                                <ul class="footer-menu">
+                                    {% for show in top_movies %}
+                                <li><a class="link-item" href="{% url 'myllist:movie-detail' show.id %}"> {{ show.title }}</a></li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Top TVs</b></p>
+                                <ul class="footer-menu">
+                                    {% for show in top_tvs %}
+                                <li><a class="link-item" href="{% url 'myllist:movie-detail' show.id %}"> {{ show.title }}</a></li>
+                                {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Support</b></p>
+                                <ul class="footer-menu">
+                                    
+                                    <li><a class="link-item" href="{% url 'myllist:about' %}">About</a></li>
+                                    <li><a class="link-item" href="#">Contact</a></li>
+                           
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END FOOTER SECTION -->
+
+    <!-- COPYRIGHT SECTION -->
+    <div class="copyright">
+        &#169; 2022 <a href="" target="_blank">
+            MyLList.</a>
+    </div>
+    <!-- END COPYRIGHT SECTION -->
+
+
+
+    <!-- SCRIPT -->
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- OWL CAROUSEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+    <!-- APP SCRIPT -->
+    <script src="{% static 'assets/js/app.js' %}"></script>
+
+</body>
+
+</html>

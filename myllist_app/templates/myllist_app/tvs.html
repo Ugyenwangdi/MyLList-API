@@ -1,0 +1,899 @@
+<!-- all tvs can select using genres -->
+
+<!-- All movies, search by genre -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        MyLList
+    </title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" />
+    <!-- BOX ICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/grid.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/app.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+
+    <link rel="stylesheet" href="{% static 'assets/css/main.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+  
+    <!--
+      - google font link
+    -->
+    <link href="https://fonts.googleapis.com/css?family=Inter:100,200,300,regular,500,600,700,800,900" rel="stylesheet" />
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <div class="nav-wrapper">
+        <div class="container">
+            <div class="nav">
+                <a href="#" class="logo">
+                    My<span class="main-color">L</span>List
+                </a>
+
+                <div class="nav-lists">
+                    <ul class="nav-menu" id="nav-menu">
+    
+                      <li><a href="{% url 'myllist:home' %}">Home</a></li>
+                      <li><a href="{% url 'myllist:movies' %}">Movies</a></li>
+                      <li><a href="{% url 'myllist:tvs' %}">TVs</a></li>
+                      <li><a href="{% url 'myllist:about' %}">About</a></li>
+
+                        <li>
+                          <form method='POST'>
+                            {% csrf_token %}
+                            <div class="search-box">
+                                
+                                    <input class="search-txt" type="text" name="movie-input" placeholder="Search movie">                           
+                                    <button class="search-btn" type='submit'><i class="fas fa-search"></i></button>
+                                
+                            </div>
+                        </form>
+                        </li> 
+                        
+                    </ul>
+                    
+
+                </div>
+                <div class="nav-menu-right">
+                    <ul class="nav-menu" id="nav-menu">
+                          
+                        <li>
+                          {% if request.user.is_authenticated %}
+                          <a href="{% url 'myllist:logout' %}" class="btn btn-hover">
+                              <span>Logout</span>
+                          </a> {% else %}
+                          <a href="{% url 'myllist:login' %}" class="btn btn-hover">
+                              <span>Login</span>
+                          </a> {% endif %}
+                        </li>
+                    </ul>
+                    <!-- MOBILE MENU TOGGLE -->
+                    <div class="hamburger-menu" id="hamburger-menu">
+                        <div class="hamburger"></div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <!-- END NAV -->
+
+    <div class="container">  
+  
+      <!--
+        - MAIN SECTION
+      -->
+      <main> 
+  
+  
+        <!--
+          - #MOVIES SECTION
+        -->
+        <section class="movies">
+  
+          <!--
+            - filter bar
+          -->
+          <div class="filter-bar">
+  
+            <div class="filter-dropdowns">
+  
+              <select name="genre" class="genre">
+                <option value="all genres">All genres</option>
+                <option value="action">Action</option>
+                <option value="adventure">Adventure</option>
+                <option value="animal">Animal</option>
+                <option value="animation">Animation</option>
+                <option value="biography">Biography</option>
+              </select>
+  
+              <select name="year" class="year">
+                <option value="all years">All the years</option>
+                <option value="2022">2022</option>
+                <option value="2020-2021">2020-2021</option>
+                <option value="2010-2019">2010-2019</option>
+                <option value="2000-2009">2000-2009</option>
+                <option value="1980-1999">1980-1999</option>
+              </select>
+  
+            </div>
+  
+            <div class="filter-radios">
+  
+              <input type="radio" name="grade" id="featured" checked>
+              <label for="featured">All</label>
+  
+              <input type="radio" name="grade" id="popular">
+              <label for="popular">Top</label>
+  
+              <input type="radio" name="grade" id="newest">
+              <label for="newest">Newest</label>
+  
+              <div class="checked-radio-bg"></div>
+  
+            </div>
+  
+          </div>
+  
+  
+          <!--
+            - movies grid
+          -->
+  
+          <div class="movies-grid">
+
+            {% for tv in all_tvs %}
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{{ tv.poster }}' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+  
+             
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>{{ tv.avg_rating }}</span>
+                  </div>
+  
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                <a href="{% url 'myllist:movie-detail' tv.id %}"><h3 class="card-title">{{ tv.title }}</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">{{ tv.avg_rating }}</span>
+                  <span class="genre">{{ tv.genres.0.name }}</span>
+                  <span class="year">{{ tv.released_date }}</span>
+                  
+                </div>
+              </div>
+  
+            </div>
+            {% endfor %}
+  
+  
+            {% comment %} <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/spider-men.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+  
+      
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>7.4</span>
+                  </div>
+  
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Spider-Man: Homecoming</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">7.4</span>
+                  <span class="genre">Action/Adventure</span>
+                  <span class="year">2017</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/matrix.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>N/A</span>
+                  </div>
+  
+                 
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">The Matrix Resurrections</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">N/A</span>
+                  <span class="genre">Sci-fi/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/red-notice.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/dune.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+  
+              
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>8.2</span>
+                  </div>
+  
+                
+                </div>
+              </div>
+  
+              <div class="card-body">
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Dune</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">8.2</span>
+                  <span class="genre">Sci-fi/Adventure</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/red-notice.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+  
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>8.3</span>
+                  </div>
+  
+                  
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">1917</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">8.3</span>
+                  <span class="genre">War/Drama</span>
+                  <span class="year">2019</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/red-notice.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/red-notice.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div>
+  
+            <div class="movie-card">
+  
+              <div class="card-head">
+                <img src="{% static 'assets/images/movies/eternals.jpg' %}" alt="" class="card-img">
+  
+                <div class="card-overlay">
+
+  
+                  <div class="rating">
+                    <ion-icon name="star-outline"></ion-icon>
+                    <span>6.8</span>
+                  </div>
+  
+                
+  
+                </div>
+              </div>
+  
+              <div class="card-body">
+                
+                <a href="{% url 'myllist:movie-detail' %}"><h3 class="card-title">Eternals</h3></a>
+  
+                <div class="card-info">
+                  <span class="genre">6.8</span>
+                  <span class="genre">Adventure/Action</span>
+                  <span class="year">2021</span>
+                </div>
+              </div>
+  
+            </div> {% endcomment %}
+  
+          </div>
+  
+          <!--
+            - load more button
+          -->
+          <button class="load-more">LOAD MORE</button>
+  
+        </section>
+  
+  
+  
+  
+  
+        <!--
+          - #CATEGORY SECTION
+        -->
+        <section class="category" id="category">
+  
+          <h2 class="section-heading">Category</h2>
+  
+          <div class="category-grid">
+  
+            <div class="category-card">
+              <img src="https://admango.cdn.mangomolo.com/analytics/uploads/180/6253ac53aa.jpg" alt="" class="card-img">
+              <div class="name">Action</div>
+              {% comment %} <div class="total">100</div> {% endcomment %}
+            </div>
+  
+            <div class="category-card">
+              <img src="https://admango.cdn.mangomolo.com/analytics/uploads/180/62e21a9a5b.jpg" alt="" class="card-img">
+              <div class="name">Comedy</div>
+              {% comment %} <div class="total">50</div> {% endcomment %}
+            </div>
+  
+            <div class="category-card">
+              <img src="https://admango.cdn.mangomolo.com/analytics/uploads/180/60d997e5ed.jpg" alt="" class="card-img">
+              <div class="name">Thriller</div>
+              {% comment %} <div class="total">20</div> {% endcomment %}
+            </div>
+  
+            <div class="category-card">
+              <img src="https://admango.cdn.mangomolo.com/analytics/uploads/180/60e9714760.jpg" alt="" class="card-img">
+              <div class="name">Horror</div>
+              {% comment %} <div class="total">80</div> {% endcomment %}
+            </div>
+  
+            <div class="category-card">
+              <img src="https://admango.cdn.mangomolo.com/analytics/uploads/180/619e22afa7.jpg" alt="" class="card-img">
+              <div class="name">Romance</div>
+              {% comment %} <div class="total">100</div> {% endcomment %}
+            </div>
+  
+            <div class="category-card">
+              <img src="https://admango.cdn.mangomolo.com/analytics/uploads/180/63133f915a.jpg" alt="" class="card-img">
+              <div class="name">Drama</div>
+              {% comment %} <div class="total">50</div> {% endcomment %}
+            </div>
+  
+            <div class="category-card">
+              <img src="https://admango.cdn.mangomolo.com/analytics/uploads/180/60d1d529a0.jpg" alt="" class="card-img">
+              <div class="name">Documentary</div>
+              {% comment %} <div class="total">20</div> {% endcomment %}
+            </div>
+  
+            <div class="category-card">
+              <img src="https://admango.cdn.mangomolo.com/analytics/uploads/180/623ed88911.jpg" alt="" class="card-img">
+              <div class="name">Fantasy</div>
+              {% comment %} <div class="total">80</div> {% endcomment %}
+            </div>
+  
+          </div>
+  
+        </section>
+
+      </main>
+  
+    </div>
+
+
+    
+    <!-- FOOTER SECTION -->
+    <footer class="section">
+      <div class="container">
+          <div class="row">
+              
+              <div class="col-4 col-md-6 col-sm-12">
+                  <div class="content">
+                      <a href="{% url 'myllist:home' %}" class="logo">
+                          My<span class="main-color">L</span>List
+                      </a>
+                      <p>
+                        Your loknyen database.
+                      </p>
+                      {% if request.user.is_authenticated %}
+                        <p>Logged in as {{request.user}} </p> {% else %}
+                        <p>Not logged in </p>
+                        
+                        {% endif %}
+                      <div class="social-list">
+                          <a href="#" class="social-item">
+                              <i class="bx bxl-facebook"></i>
+                          </a>
+                          <a href="#" class="social-item">
+                              <i class="bx bxl-twitter"></i>
+                          </a>
+                          <a href="#" class="social-item">
+                              <i class="bx bxl-instagram"></i>
+                          </a>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-8 col-md-6 col-sm-12">
+                  <div class="row">
+                      <div class="col-3 col-md-6 col-sm-6">
+                          <div class="content">
+                              <p><b>MyLList</b></p>
+                              <ul class="footer-menu">
+
+                                  <li><a class="link-item" href="https://rapidapi.com/Wdzz/api/myllist/">API</a></li>
+                                    <li><a class="link-item" href="{% url 'myllist:home' %}">Home</a></li>
+                                    <li><a class="link-item" href="{% url 'myllist:movies' %}">Movies</a></li>   
+                                    <li><a class="link-item" href="{% url 'myllist:tvs' %}">TV shows</a></li>                                  
+                              </ul>
+                          </div>
+                      </div>
+                      <div class="col-3 col-md-6 col-sm-6">
+                          <div class="content">
+                              <p><b>Top Movies</b></p>
+                              <ul class="footer-menu">
+                                {% for show in top_movies %}
+                                <li><a class="link-item" href="{% url 'myllist:movie-detail' show.id %}"> {{ show.title }}</a></li>
+                                {% endfor %}
+                              </ul>
+                          </div>
+                      </div>
+                      <div class="col-3 col-md-6 col-sm-6">
+                          <div class="content">
+                              <p><b>Top TVs</b></p>
+                              <ul class="footer-menu">
+                                {% for show in top_tvs %}
+                                <li><a class="link-item" href="{% url 'myllist:movie-detail' show.id %}"> {{ show.title }}</a></li>
+                                {% endfor %}
+                              </ul>
+                          </div>
+                      </div>
+                      <div class="col-3 col-md-6 col-sm-6">
+                          <div class="content">
+                              <p><b>Support</b></p>
+                              <ul class="footer-menu">
+                                  
+                                <li><a class="link-item" href="{% url 'myllist:about' %}">About</a></li>
+                                <li><a class="link-item" href="#">Contact</a></li>
+                         
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </footer>
+  <!-- END FOOTER SECTION -->
+
+  <!-- COPYRIGHT SECTION -->
+  <div class="copyright">
+      &#169; 2022 <a class="footer-logo" href="" target="_blank">
+          MyLList.</a>
+  </div>
+  <!-- END COPYRIGHT SECTION -->
+
+
+  <!-- SCRIPT -->
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- OWL CAROUSEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+    <!-- APP SCRIPT -->
+  <script src="{% static 'assets/js/app.js' %}"></script>
+
+</body>
+
+</html>
+

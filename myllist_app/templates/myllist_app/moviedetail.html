@@ -1,0 +1,437 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        MyLList
+    </title>
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
+    <!-- OWL CAROUSEL -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" />
+    <!-- BOX ICONS -->
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <!-- APP CSS -->
+    <link rel="stylesheet" href="{% static 'assets/css/grid.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/app.css' %}">
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.ico' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <div class="nav-wrapper">
+        <div class="container">
+            <div class="nav">
+                <a href="#" class="logo">
+                    My<span class="main-color">L</span>List
+                </a>
+
+                <div class="nav-lists">
+                    <ul class="nav-menu" id="nav-menu">
+    
+                        <li><a href="{% url 'myllist:home' %}">Home</a></li>
+                        <li><a href="{% url 'myllist:movies' %}">Movies</a></li>
+                        <li><a href="{% url 'myllist:tvs' %}">TVs</a></li>
+                        <li><a href="{% url 'myllist:about' %}">About</a></li>
+
+                        <li>
+                            <form method='POST'>
+                                {% csrf_token %}
+                                <div class="search-box">
+                                    
+                                        <input class="search-txt" type="text" name="movie-input" placeholder="Search movie">                           
+                                        <button class="search-btn" type='submit'><i class="fas fa-search"></i></button>
+                                    
+                                </div>
+                            </form>
+                        </li> 
+                        
+                    </ul>
+                    
+
+                </div>
+                <div class="nav-menu-right">
+                    <ul class="nav-menu" id="nav-menu">
+                          
+                        <li>
+                            {% if request.user.is_authenticated %}
+                            <a href="{% url 'myllist:logout' %}" class="btn btn-hover">
+                                <span>Logout</span>
+                            </a> {% else %}
+                            <a href="{% url 'myllist:login' %}" class="btn btn-hover">
+                                <span>Login</span>
+                            </a> {% endif %}
+                        </li>
+                    </ul>
+                    <!-- MOBILE MENU TOGGLE -->
+                    <div class="hamburger-menu" id="hamburger-menu">
+                        <div class="hamburger"></div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <!-- END NAV -->
+
+    <!-- DETAILS -->
+
+    <div class="movie">
+        <div class="movie__intro">
+            <div class="movie__backdrop"></div>
+            {% comment %} <img class="movie__backdrop" src='{{ show.show_backdrop }}'/> {% endcomment %}
+        </div>
+        <div class="movie__detail">
+            <div class="movie__detailLeft">
+                <div class="movie__posterBox">
+                    <img class="movie__poster" src='{{ show.poster }}'/>
+                </div>
+            </div>
+            <div class="movie__detailRight">
+                <div class="movie__detailRightTop">
+                    <div class="movie__name">{{ show.title }}</div>
+
+                    <div class="stats">
+                        <div class="score">
+                            <h3 class="movie__rating">Score</h3>
+                            {{ show.avg_rating }} <i class="bx bxs-star"></i>
+                            <p class="" id='23'>{{ show.number_rating }} users</p>
+                        </div>
+                        <div class="rank">
+                            <h3>Rank</h3>
+                            #
+                            {% comment %} <p class="" id='23'>Summer</p> {% endcomment %}
+        
+                        </div>
+
+                        <div class="members">
+                            <h3>Members</h3>
+                            <p class="" id='23'># </p>
+
+                        </div>
+
+
+                    </div>
+
+                    <div class="movie__runtime">{{ show.running_time }}</div>
+                    <div class="movie__releaseDate">Released date : {{ released_date }}</div>
+                    <div class="movie__genres">
+                     
+                        {% for genre in show.genres %}
+                        <span class="movie__genre" id='23'>{{ genre.name }}</span>
+                        {% endfor %}
+                            
+                    </div>
+                </div>                
+                
+            </div>
+        </div>
+       
+    </div>
+
+    <div class="movie-info-box row">
+        <div class=" col-3">
+                <div class="movie-info-left row">
+                
+                    <div class="content">
+                        <p><b>Alternative Titles</b></p>
+                        <ul class="footer-menu">
+
+                            {% for altt in show.alternative_titles %}
+
+                            <li><p class="info-p">{{ altt.language }}: {{ altt.alternative_title }}</p></li>
+
+                            {% endfor %}
+                                                    
+                        </ul>
+                    </div>
+                
+                
+                    <div class="content">
+                        <p><b>Information</b></p>
+                        <ul class="footer-menu">
+                            <li><p class="info-p">Type: {{ types }}</p></li>
+                            <li><p class="info-p">Genre: {{ genres }}</p></li>
+                            <li><p class="info-p">Running Time: {{ show.running_time}}</p></li>
+                            <li><p class="info-p">Status: {{ show.status }}</p></li>
+                            <li><p class="info-p">Country origin: {{ show.countries_origin }}</p></li>
+                            <li><p class="info-p">Languages: {{ show.languages }}</p></li>
+                            <li><p class="info-p">Producers: {{ producers }}</p></li>
+                            <li><p class="info-p">Director: {{ directors }}</p></li>
+                            <li><p class="info-p">Writer: {{ writers }}</p></li>
+                            <li><p class="info-p">Released Date: {{ released_date }}</p></li>
+                        </ul>
+                    </div>
+                
+                    <div class="content">
+                        <p><b>Statistics</b></p>
+                        <ul class="footer-menu">
+                            <li><p class="info-p">Score: {{ show.avg_rating }}</p></li>
+                            <li><p class="info-p">Ranked: #</p></li>
+                            <li><p class="info-p">Number ratings: {{ show.number_rating }}</p></li>
+                            <li><p class="info-p">Members: # </p></li>
+                        </ul>
+                    </div>
+                
+                
+                    <div class="content">
+                        <p><b>External Links</b></p>
+                        <ul class="footer-menu">
+                            
+                            <li><a class="info-p link-item" href="{{ show.link }}">Official site</a></li>
+                    
+                        </ul>
+                    </div>
+
+                    <div class="content">
+                        <p><b>Streaming Platforms</b></p>
+                        <ul class="footer-menu">
+                            {% for platform in show.platforms %}
+                            
+                            <li><a class="info-p link-item" href="{{ platform.link }}">{{ platform.name }}</a></li>
+                            {% endfor %}
+                            
+                    
+                        </ul>
+                    </div>
+                    
+                </div>
+        </div>
+
+        <div class="movie-info-right col-9">
+            <div class="synopsis-box">
+                <div class="synopsisText">Synopsis</div><hr>
+                <div class="synopsis">
+                    {{ show.synopsis }}
+                </div>
+            </div>
+
+            
+
+            <div class="background-box">
+                <div class="background-txt">Background</div><hr>
+                <div class="background">
+                    {{ show.background }}
+                </div>
+            </div>
+
+            <br><br>
+
+            
+
+            <form method='POST'>
+
+                <p><label for="review">Write a Review:</label></p>
+
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+
+                <form method='POST' class="form">
+                    {% csrf_token %}
+
+                    <select name="rating" class="rating">
+                        <option value="Select Rating">Select Rating</option>
+                        <option value="10">10 (Masterpiece)</option>
+                        <option value="9">9 (Great)</option>
+                        <option value="8">8 (Very good)</option>
+                        <option value="7">7 (Good)</option>
+                        <option value="6">6 (Fine)</option>
+                        <option value="5">5 (Average)</option>
+                        <option value="4">4 (Bad)</option>
+                        <option value="3">3 (Very Bad)</option>
+                        <option value="2">2 (Horrible)</option>
+                        <option value="1">1 (Appalling)</option>
+        
+                    </select><br>
+
+                    
+                    <textarea id="review" name="review" rows="4" cols="50"></textarea>
+                    <br>
+
+                    <select name="status" class="status">
+                        <option value="Status">Status</option>
+                        <option value="none">None</option>
+                        <option value="plan">Plan</option>
+                        <option value="watching">Watching</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <input type="submit" value="Submit">
+
+                </form>
+            </form>
+
+        </div>
+
+
+    
+    </div>
+
+    <div class="movie-character-right col-9">
+        <div class="character-txt">Actors and Characters</div><hr>
+        <div class="character-box row">
+            {% for actor in show.actors %}
+            <div class="character col-2">
+                <img class="character_img" src='{{ actor.image }}'/>
+                <p>{{ actor.character_name }}</p>
+                <small>{{ actor.character_role }}</small>
+            </div>
+            {% endfor %}
+            {% comment %} <div class="character col-2">
+                <img class="character_img" src='https://image.tmdb.org/t/p/original/kPzQtr5LTheO0mBodIeAXHgthYX.jpg'/>
+                <p>Name</p>
+                <small>Main</small>
+            </div>
+
+            <div class="character col-2">
+                <img class="character_img" src='https://image.tmdb.org/t/p/original/kPzQtr5LTheO0mBodIeAXHgthYX.jpg'/>
+                <p>Name</p>
+                <small>Supporting</small>
+            </div>
+            <div class="character col-2">
+                <img class="character_img" src='https://image.tmdb.org/t/p/original/kPzQtr5LTheO0mBodIeAXHgthYX.jpg'/>
+                <p>Name</p>
+                <small>Main</small>
+            </div>
+            <div class="character col-2">
+                <img class="character_img" src='https://image.tmdb.org/t/p/original/kPzQtr5LTheO0mBodIeAXHgthYX.jpg'/>
+                <p>Name</p>
+                <small>Supporting</small>
+            </div>
+            <div class="character col-2">
+                <img class="character_img" src='https://image.tmdb.org/t/p/original/kPzQtr5LTheO0mBodIeAXHgthYX.jpg'/>
+                <p>Name</p>
+                <small>Main</small>
+            </div>
+            <div class="character col-2">
+                <img class="character_img" src='https://image.tmdb.org/t/p/original/kPzQtr5LTheO0mBodIeAXHgthYX.jpg'/>
+                <p>Name</p>
+                <small>Main</small>
+            </div>
+            <div class="character col-2">
+                <img class="character_img" src='https://image.tmdb.org/t/p/original/kPzQtr5LTheO0mBodIeAXHgthYX.jpg'/>
+                <p>Name</p>
+                <small>Main</small>
+            </div> {% endcomment %}
+        </div>
+
+        
+
+    
+
+    </div>
+
+
+
+    
+    <!-- FOOTER SECTION -->
+    <footer class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-4 col-md-6 col-sm-12">
+                    <div class="content">
+                        <a href="{% url 'myllist:home' %}" class="logo">
+                            My<span class="main-color">L</span>List
+                        </a>
+                        <p>
+                            Your loknyen database.
+                        </p>
+                        {% if request.user.is_authenticated %}
+                        <p>Logged in as {{request.user}} </p> {% else %}
+                        <p>Not logged in </p>
+                        
+                        {% endif %}
+                        <div class="social-list">
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-facebook"></i>
+                            </a>
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-twitter"></i>
+                            </a>
+                            <a href="#" class="social-item">
+                                <i class="bx bxl-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8 col-md-6 col-sm-12">
+                    <div class="row">
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>MyLList</b></p>
+                                <ul class="footer-menu">
+
+                                    <li><a class="link-item" href="https://rapidapi.com/Wdzz/api/myllist/">API</a></li>
+                                    <li><a class="link-item" href="{% url 'myllist:home' %}">Home</a></li>
+                                    <li><a class="link-item" href="{% url 'myllist:movies' %}">Movies</a></li>   
+                                    <li><a class="link-item" href="{% url 'myllist:tvs' %}">TV shows</a></li>                               
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Top Movies</b></p>
+                                <ul class="footer-menu">
+                                    {% for show in top_movies %}
+                                    <li><a class="link-item" href="{% url 'myllist:movie-detail' show.id %}"> {{ show.title }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Top TVs</b></p>
+                                <ul class="footer-menu">
+                                    {% for show in top_tvs %}
+                                    <li><a class="link-item" href="{% url 'myllist:movie-detail' show.id %}"> {{ show.title }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-3 col-md-6 col-sm-6">
+                            <div class="content">
+                                <p><b>Support</b></p>
+                                <ul class="footer-menu">
+                                    
+                                    <li><a class="link-item" href="{% url 'myllist:about' %}">About</a></li>
+                                    <li><a class="link-item" href="#">Contact</a></li>
+                           
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- END FOOTER SECTION -->
+
+    <!-- COPYRIGHT SECTION -->
+    <div class="copyright">
+        &#169; 2022 <a href="" target="_blank">
+            MyLList.</a>
+    </div>
+    <!-- END COPYRIGHT SECTION -->
+
+
+
+    <!-- SCRIPT -->
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- OWL CAROUSEL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous"></script>
+    <!-- APP SCRIPT -->
+    <!-- APP SCRIPT -->
+    <script src="{% static 'assets/js/app.js' %}"></script>
+
+</body>
+
+</html>
