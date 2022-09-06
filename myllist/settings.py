@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-izqepfslpc1vn_(nvq-srtb(%!#w*w7ao$k-%ql-ov76fx-#%8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['myllist.herokuapp.com','localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['myllist.herokuapp.com','localhost', '127.0.0.1', 'myllist.up.railway.app']
 
 
 # Application definition
