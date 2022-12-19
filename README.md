@@ -29,16 +29,18 @@
 # Postman
 # Heroku
 
+# Testing API endpoints
+<img src="myllist.png">  
+
 # Home Page
-<img src="./resources/images/Devsearch Home.jpg">  
+<img src="home.png">  
 
 
-# Projects Page
-<img src="./resources/images/DevSearch Projects.jpg">  
+# Movies Page
+<img src="movies.png">  
 
-# Profile Page
-<img src="./resources/images/Devsearch Profile.jpg">  
+# Details Page
+<img src="details.png">  
 
-# User Inbox
-<img src="./resources/images/Devsearch Inbox.jpg">  
+
 
