@@ -26,8 +26,8 @@
 # Tech Stack
 * Django
 * Django REST Framework
-# Postman
-# Heroku
+* Postman
+* Heroku
 
 # Testing API endpoints
 <img src="myllist.png">  
