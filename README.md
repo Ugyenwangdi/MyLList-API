@@ -32,15 +32,7 @@
 # Testing API endpoints
 <img src="myllist.png">  
 
-# Home Page
-<img src="home.png">  
 
-
-# Movies Page
-<img src="movies.png">  
-
-# Details Page
-<img src="details.png">  
 
 
 
